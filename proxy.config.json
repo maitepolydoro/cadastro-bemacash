@@ -1,0 +1,8 @@
+{
+  "/integration": {
+    "target": "http://integration.full7.bemacashstage.com.br",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

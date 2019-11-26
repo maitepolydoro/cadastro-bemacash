@@ -1,0 +1,166 @@
+
+<div class="mainPage">
+    <thf-widget class="widget" t-primary-label="Cancelar" t-secondary-label="Confirmar" (t-primary-action)="cancel()"
+        (t-secondary-action)="confirm()">
+        <h2>Cadastro de loja</h2>
+        <!-- CONTA  -->
+        <hr>
+        <h3>Dados da Conta</h3>
+
+        <form #formNewUser="ngForm">
+            <div class="thf-row">
+                <div class="thf-row">
+                    <thf-email class="thf-md-6" name="email" [(ngModel)]="conta.email" t-clean t-label="Email"
+                        t-required>
+                    </thf-email>
+                    <thf-input class="thf-md-6" id='cpf' name="CPF" [(ngModel)]="conta.cpf" t-clean t-label="CPF"
+                        t-mask="999.999.999-99" t-pattern='[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}'
+                        t-error-pattern='CPF inválido' t-minlength="11" t-required (t-blur)='validcpf()'>
+                    </thf-input>
+
+                </div>
+                <div class="thf-row">
+                    <thf-input class="thf-md-6" name="nomeConta" [(ngModel)]="conta.nomeConta" t-clean t-label="Nome"
+                        t-maxlength="60" t-required>
+                    </thf-input>
+                    <thf-input class="thf-md-6" name="sobrenomeConta" [(ngModel)]="conta.sobrenomeConta" t-clean
+                        t-maxlength="60" t-label="Sobrenome" t-required>
+                    </thf-input>
+                </div>
+                <div class="div-doc-option">
+                    <thf-radio-group class="div-doc-option-item" name="solvType" [(ngModel)]="solvType"
+                        t-label="Selecione um tipo de Solução" [t-options]="solvOptions"
+                        (t-change)="changeSolv($event)">
+                    </thf-radio-group>
+
+                </div>
+            </div>
+            <!-- LOJA  -->
+            <hr>
+            <h3>Dados da Loja</h3>
+            <div>
+                <div class="div-doc-option">
+
+                    <thf-radio-group class="div-doc-option-item" name="documentType" [(ngModel)]="documentType"
+                        t-label="Selecione um tipo de Documento" [t-options]="options" (t-change)="changeType($event)"
+                        [t-disabled]='rddisabled'>
+                    </thf-radio-group>
+                </div>
+
+                <div class="div-doc">
+                    <thf-input class="div-doc-type-item" name="document" [(ngModel)]="document"
+                        [t-pattern]="documento.pattern" [t-error-pattern]="documento.errorPattern" t-required
+                        [t-label]="documentLabel" [t-mask]="documento.mask" [t-minlength]="minLength"
+                        [t-disabled]='docdisabled'>
+                    </thf-input>
+                    <thf-input class="div-doc-razao-item" name="rsocial" [(ngModel)]="rsocial" t-clean t-maxlength="60"
+                        t-label="Razão Social" t-required>
+                    </thf-input>
+                </div>
+                <div class="div-doc">
+                    <thf-input class="div-doc-type-item" name="iestadual" [(ngModel)]="iestadual" t-clean
+                        t-label="Inscrição Estadual" t-minlength="9" [t-disabled]="iedisabled" t-maxlength="14"
+                        t-error-pattern='IE inválido'>
+                    </thf-input>
+                    <thf-input class="div-doc-razao-item" name="nfantasia" [(ngModel)]="nfantasia" t-clean
+                        t-maxlength="60" t-label="Nome Fantasia" t-required>
+                    </thf-input>
+                </div>
+            </div>
+            <hr>
+
+            <div class="div-cep">
+                <thf-input class="div-cep-item" name="cep" [(ngModel)]="CepEndereco.cep" (t-blur)='buscarCep()'
+                    (keyup.enter)="buscarCep()" t-clean t-label="CEP" t-pattern='[0-9]{3}\-?[0-9]{3}' t-mask="99999-999" t-maxlength="9" t-required>
+                </thf-input>
+
+
+                <thf-select class="div-cep-item" name="state" [(ngModel)]="CepEndereco.estado" t-label="Estado"
+                    t-required [t-options]="stateOptions" (t-change)="changecity($event)"
+                    [t-disabled]="CepEndereco.cep !== ''">
+                </thf-select>
+
+
+                <thf-input class="div-cep-item" name="city" t-required [(ngModel)]="CepEndereco.municipio"
+                    t-label="Município" [t-disabled]="CepEndereco.cep !== ''">
+                </thf-input>
+            </div>
+
+            <div class="div-end">
+                <thf-input class="div-end-item" name="endereco" [(ngModel)]="CepEndereco.endereco" t-clean
+                    t-label="Endereço" t-required>
+                </thf-input>
+                <thf-input class="div-end-num-item" name="numero" [(ngModel)]="numero" t-clean t-label="Número"
+                    t-minlength="1" t-maxlength="5" t-required>
+                </thf-input>
+                <thf-input class="div-end-comp-item" name="comp" [(ngModel)]="complemento" t-clean
+                    t-label="Complemento">
+                </thf-input>
+            </div>
+            <div class="thf-row">
+                <thf-input class="thf-md-6" name="bairro" [(ngModel)]="CepEndereco.bairro" t-clean t-label="Bairro"
+                    t-required>
+                </thf-input>
+                <thf-input class="thf-md-6" name="im" [(ngModel)]="imunicipal" t-clean t-label="Inscrição Municipal" t-mask = '99-99999'>
+                </thf-input>
+            </div>
+            <hr>
+            <div class="div-tel">
+                <thf-input class="div-tel-item" name="tel" [(ngModel)]="tel" t-clean t-label="Telefone" t-minlength="13"
+                    t-mask="(99)9999-9999">
+                </thf-input>
+                <thf-input class="div-tel-item" name="cel" [(ngModel)]="cel" t-clean t-label="Celular" t-minlength="14"
+                    t-mask="(99)99999-9999" >
+                </thf-input>
+                <thf-input class="div-tel-item" name="telLoja" [(ngModel)]="telLoja" t-clean t-label="Telefone Loja"
+                    t-minlength="13" t-mask="(99)9999-9999" t-required>
+                </thf-input>
+            </div>
+            <!--
+            <hr>
+            <h3>Perfil Fiscal</h3>
+            <div class="div-sol">
+                <thf-select class="div-sol-item" name="segmento" [(ngModel)]="segmento" t-label="Segmento"
+                    [t-options]="segmentoOptions"></thf-select>
+                <thf-select class="div-sol-item" name="categoria" [(ngModel)]="categoria" t-label="Categoria"
+                    [t-options]="categoriaOptions">
+                </thf-select>
+                <thf-select class="div-sol-item" name="perfilEfd" [(ngModel)]="perfilEfd" t-label="Perfil EFD"
+                    [t-options]="perfilEfdOptions">
+                </thf-select>
+            </div>
+            <div class="div-sol">
+
+                <thf-input class="div-sol-item" name="cofins" [(ngModel)]="cofins" t-label="COFINS"
+                    t-placeholder="0,00%" t-mask="9,99"></thf-input>
+
+                <thf-input class="div-sol-item" name="pis" [(ngModel)]="pis" t-label="PIS" t-placeholder="0,00%"
+                    t-mask="9,99"></thf-input>
+
+            </div>
+            -->
+            <hr>
+            <h3>Solução Comercial</h3>
+            <div class="div-totvs">
+                    <thf-select class="div-totvs-item" name="solucao" [(ngModel)]="solucaoTipo" t-label="Solução"
+                    [t-options]="solucao" t-required>
+                </thf-select>
+                <thf-input class="div-totvs-item" name="protheusId" [(ngModel)]="protheusId" t-clean
+                    t-label="Protheus Id" t-minlength="1" t-maxlength="6" t-required>
+                </thf-input>
+            </div>
+                <div class="div-totvs">
+                        <thf-input class="div-totvs-item" name="cnae" [(ngModel)]="cnae" t-clean t-mask = '9999-9/99'
+                        t-label="Cnae" t-minlength="1" t-required>
+                    </thf-input>
+                    <thf-input class="div-totvs-item" name="reseller" [(ngModel)]="resellerCnpj"
+                    t-pattern='[0-9]{2}\.?[0-9]{3}\.?[0-9]{3}\/?[0-9]{4}\-?[0-9]{2}' t-error-pattern="CNPJ inválido"
+                    t-label="Revenda/Canal" t-mask="99.999.999/9999-99" t-minlength=12 t-required (t-blur)='validreseller()'>
+                </thf-input>
+            </div>
+        </form>
+        <hr>
+    </thf-widget>
+    <hr>
+    <thf-upload t-url = 'C:\Users\denni\OneDrive\Documentos\Facul'></thf-upload>
+</div>
